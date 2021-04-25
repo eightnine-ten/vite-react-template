@@ -1,70 +1,223 @@
-# Getting Started with Create React App
+## 前言
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+  本文的例子都是经过实践后总结的一些比较实用的技巧, 如果疑惑或者错误, 欢迎指正!
+## thenby多重排序
 
-## Available Scripts
+  [github地址](https://github.com/Teun/thenBy.js)
 
-In the project directory, you can run:
+  场景: 需要对数据进行多重排序
 
-### `yarn start`
+   ```js
+    var data = [ { phare: 1, order: 1 }, { phare: 2, order: 2 }, { phare: 2, order: 1 } ];
+    var sortData =  data.sort(
+    firstBy(function(a, b) { return a.phare - b.phare })
+    .thenBy(function(a, b) { return a.order - b.order })
+    );
+   ```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  输出: 
+  (index) phare order
+  0	1	1
+  1	2	1
+  2	2	2
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  当然如果单纯的从小大排序, 在这里例子中还可以这么写:
+  
+  ```js
+  data.sort(firstBy('phare').thenBy('order')) 
+  ```
 
-### `yarn test`
+## 获取当前页面滚动位置
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  场景: 获取页面往x或者y方向滚动了多少距离
 
-### `yarn build`
+  ```js
+  const getScrollPosition = (el = window) => ({
+    x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+    y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
+  });
+  ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+##  平滑的滚动到页面顶部
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  场景: 当浏览网页的时候, 我们想快速地返回顶部
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  ```js
+  const scrollToTop = () => {
+    const c = document.documentElement.scrollTop || document.body.scrollTop;
+    if (c > 0) {
+      window.requestAnimationFrame(scrollToTop);
+      window.scrollTo(0, c - c / 8);
+    }
+  }
+  ```
 
-### `yarn eject`
+## 判断当前元素在当前视图是否能够被看见
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  ```js
+  const elementIsVisibleInViewport = el => {
+    const { top, left, bottom, right } = el.getBoundingClientRect();
+    const { innerHeight, innerWidth } = window;
+    return top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
+  };
+  ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 判断当前浏览器选项卡是否聚焦
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+  ```js
+  const isBrowserTabFocused = () => !document.hidden;
+  ```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 获取中国省市区镇村二级三级四级五级联动地址数据
 
-## Learn More
+   [github地址](https://github.com/modood/Administrative-divisions-of-China)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```sh
+    # 删除现有的数据
+    $ rm dist/*.csv && rm dist/[a-z]*.json && rm dist/data.sqlite && touch dist/data.sqlite
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    # 拉数据（这个步骤比较耗时）
+    $ npm run fetch
 
-### Code Splitting
+    # 格式化 json csv 和联动数据等
+    $ npm run build
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## React路由缓存
 
-### Analyzing the Bundle Size
+  [github地址](https://github.com/CJY0208/react-router-cache-route)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  ```js
+  import React from 'react'
+  import { HashRouter as Router, Route } from 'react-router-dom'
+  import CacheRoute, { CacheSwitch } from 'react-router-cache-route'
+  import List from './views/List'
+  import Item from './views/Item'
+  const App = () => (
+    <Router>
+      <CacheSwitch>
+        <CacheRoute exact path="/list" component={List} />
+        <Route exact path="/item/:id" component={Item} />
+        <Route render={() => <div>404 Not Found</div>} />
+      </CacheSwitch>
+    </Router>
+  )
+  export default App
+  ```
 
-### Making a Progressive Web App
+  ## React精美的toast组件
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  [github地址](https://github.com/fkhadra/react-toastify)
 
-### Advanced Configuration
+  图片
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  ```js
+  import { toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
-### Deployment
+  toast.warn("Warning Notification !", {
+    position: toast.POSITION.BOTTOM_LEFT
+  });
+  ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  ## 处理图片呈现方式的组件
 
-### `yarn build` fails to minify
+  [demo地址](https://www.albertjuhe.com/react-lazy-load-image-component)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  我们来看一下正常不加任何处理图片展示效果: 
+
+  gif
+
+  接下来看一下使用 ```  effect="blur" ```属性后展示效果: 
+
+  gif
+
+  ```js
+  import { LazyLoadImage } from 'react-lazy-load-image-component';
+  import 'react-lazy-load-image-component/src/effects/blur.css';
+
+  <LazyLoadImage
+    alt="img"
+    height={400}
+    effect="blur"
+    src="https://www.albertjuhe.com/images/07.jpg"
+  />
+  ```
+
+  ## 根据DOM以及DOM的属性名获取属性的具体值
+
+  ```js
+  const SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g;
+  const MOZ_HACK_REGEXP = /^moz([A-Z])/;
+
+  const camelCase = function(name) {
+    return name
+      .replace(SPECIAL_CHARS_REGEXP, function(_, separator, letter, offset) {
+        return offset ? letter.toUpperCase() : letter;
+      })
+      .replace(MOZ_HACK_REGEXP, 'Moz$1');
+  };
+
+  const getStyle = function(element, styleName) {
+    if (!element || !styleName) return null;
+    styleName = camelCase(styleName);
+    if (styleName === 'float') {
+      styleName = 'cssFloat';
+    }
+    try {
+      var computed = document.defaultView.getComputedStyle(element, '');
+      return element.style[styleName] || computed ? computed[styleName] : null;
+    } catch (e) {
+      return element.style[styleName];
+    }
+  };
+
+  getStyle(DOMRef.current, 'width')
+  ```
+
+  ## 巧用range计算内容的宽度
+
+  场景: 获取div内所有节点的宽度之和
+
+  ```js
+  const range  = document.createRange();
+  range.setStart(element, 0);
+  range.setEnd(element, element.childNodes.length)
+  range.getBoundingClientRect().width  
+  ```
+  ## 校验一组数据
+
+  [github地址](https://github.com/jquense/yup)
+
+  ```js
+  let yup = require('yup');
+
+  let schema = yup.object().shape({
+    name: yup.string().required(),
+    age: yup.number().required().positive().integer(),
+    email: yup.string().email(),
+    website: yup.string().url(),
+    createdOn: yup.date().default(function () {
+      return new Date();
+    }),
+  });
+
+    // check validity
+  schema
+    .isValid({
+      name: 'jimmy',
+      age: 24,
+    })
+    .then(function (valid) {
+      valid; // => true
+    });
+
+  // you can try and type cast objects to the defined schema
+  schema.cast({
+    name: 'jimmy',
+    age: '24',
+    createdOn: '2014-09-23T19:25:25Z',
+  });
+  ```
+
+
