@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.13.16",
+    "@babel/parser": "^7.13.16",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "@babel/types": "^7.13.17",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -21,11 +24,14 @@
     "yup": "^0.32.8"
   },
   "devDependencies": {
+    "@rollup/pluginutils": "^4.1.0",
     "@vitejs/plugin-react-refresh": "^1.3.1",
+    "json-css": "^1.5.6",
     "react-router-dom": "^5.2.0",
     "sass": "^1.32.11",
-    "vite": "^2.1.5",
-    "vite-plugin-imp": "^2.0.7"
+    "vite": "^2.0.7",
+    "vite-plugin-imp": "^2.0.7",
+    "vite-plugin-transform-css-modules": "^1.0.1"
   },
   "scripts": {
     "dev": "vite --mode development",

@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import vitePluginImp from 'vite-plugin-imp'
-import myPlugin from './myPlugin';
+import vitePluginTransformCssModules from 'vite-plugin-transform-css-modules';
 import path from 'path';
-const cssModuleRegex = /\.module\.css$/;
-const sassRegex = /\.(scss|sass)$/;
 const config  = {
   development: {
     cdn: './',
@@ -45,7 +43,7 @@ export default defineConfig({
   },
   base: base.cdn,
   plugins: [
-    myPlugin(),
+    vitePluginTransformCssModules(),
     reactRefresh(),
     vitePluginImp({
       libList: [

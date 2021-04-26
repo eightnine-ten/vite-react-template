@@ -2,13 +2,14 @@ import React from 'react';
 import './index.css';
 import Core from './Core';
 import avatar from './avatar.png';
+import style from './test.scss';
+import { consoleLog } from './test';
 
-console.log(avatar);
-
+consoleLog();
 const modules = [
   {
     path: '/aa',
-    component: () => <div>aa<img alt="img" style={{ height: 100, width: 100 }} src={avatar} /></div>
+    component: () => <div className={style.test}>aa<img alt="img" style={{ height: 100, width: 100 }} src={avatar} /></div>
   },
   {
     path: '/bb',
