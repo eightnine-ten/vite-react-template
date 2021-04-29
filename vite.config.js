@@ -21,6 +21,8 @@ const config  = {
 const env = process.argv[process.argv.length - 1];
 const base = config[env];
 
+console.log(base);
+
 // https://vitejs.dev/config/
 export default defineConfig({
   esbuild: {
@@ -36,12 +38,9 @@ export default defineConfig({
     modules: {
       scopeBehaviour: 'local',
       localsConvention: 'camelCaseOnly'
-    },
-    preprocessorOptions: {
-    
     }
   },
-  base: base.cdn,
+  // base: base.cdn,
   plugins: [
     vitePluginTransformCssModules(),
     reactRefresh(),

@@ -1,51 +1,23 @@
 import React from 'react';
 import './index.css';
 import Core from './Core';
-import avatar from './avatar.png';
-import style from './test.scss';
-import { consoleLog } from './test';
+import { Pagination } from 'antd';
+import { routers } from './router';
+import { loginPlugin } from './package/Login';
+import { layoutPlugin } from './package/Layout';
 
-consoleLog();
-const modules = [
-  {
-    path: '/aa',
-    component: () => <div className={style.test}>aa<img alt="img" style={{ height: 100, width: 100 }} src={avatar} /></div>
-  },
-  {
-    path: '/bb',
-    component: () => <div>bb</div>
-  }
-];
 
-const modules2 = [
-  {
-    path: '/cc',
-    component: () => <div>cc</div>
-  }
-];
-
-const plugin = {
-  pluginName: 'login',
-  getLoginComponent: (opt) =>  {
-    console.log(opt);
-    return <div>login</div>
-  }
-}
-
-Core.use(modules);
-Core.use(modules2);
-
-Core.plugin(plugin);
-
-const locale = {
-  en_US: {
-    locale: 'en-us',
-    aaa: 123
-  },
-  zh_CN: {
-    locale: 'zh-cn',
-    aaa: 1235
-  }
+const module = {
+  routers: [
+    {
+      path: '/aa',
+      component: () => <Pagination defaultCurrent={1} total={50} />
+    }
+  ]
 };
 
-new Core({ locale }).mount('#root');
+Core.use(module);
+Core.plugin(loginPlugin);
+Core.plugin(layoutPlugin);
+
+new Core({ routers }).mount('#root');
