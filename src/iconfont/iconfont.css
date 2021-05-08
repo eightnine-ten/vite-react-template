@@ -1,0 +1,47 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 2034599 */
+  src: url('iconfont.woff2?t=1620367978503') format('woff2'),
+       url('iconfont.woff?t=1620367978503') format('woff'),
+       url('iconfont.ttf?t=1620367978503') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icontubiaozhexiantu:before {
+  content: "\e600";
+}
+
+.icontubiaobeifen5:before {
+  content: "\e607";
+}
+
+.icontubiao:before {
+  content: "\e608";
+}
+
+.iconbiaoge:before {
+  content: "\e60b";
+}
+
+.icontable:before {
+  content: "\e7c6";
+}
+
+.icondate:before {
+  content: "\e6c5";
+}
+
+.iconbutton:before {
+  content: "\e65b";
+}
+
+.iconjiqi:before {
+  content: "\e60e";
+}
+

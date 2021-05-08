@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import vitePluginImp from 'vite-plugin-imp'
 import vitePluginTransformCssModules from 'vite-plugin-transform-css-modules';
+import vitePlugin from 'vite-plugin-react-js-support';
+
 import path from 'path';
 const config  = {
   development: {
@@ -21,7 +23,7 @@ const config  = {
 const env = process.argv[process.argv.length - 1];
 const base = config[env];
 
-console.log(base);
+console.log('--->',base);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -44,6 +46,7 @@ export default defineConfig({
   plugins: [
     vitePluginTransformCssModules(),
     reactRefresh(),
+    vitePlugin([], { jsxInject: true }),
     vitePluginImp({
       libList: [
         {
