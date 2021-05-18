@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import vitePluginImp from 'vite-plugin-imp'
-import vitePluginTransformCssModules from 'vite-plugin-transform-css-modules';
-import vitePlugin from 'vite-plugin-react-js-support';
+// import vitePluginTransformCssModules from 'vite-plugin-transform-css-module';
+import fs from 'fs/promises';
 
 import path from 'path';
 const config  = {
@@ -22,13 +22,29 @@ const config  = {
 
 const env = process.argv[process.argv.length - 1];
 const base = config[env];
-
-console.log('--->',base);
-
 // https://vitejs.dev/config/
 export default defineConfig({
   esbuild: {
-    target: 'es2020',
+    loader: "jsx",
+    include: /src\/.*\.jsx?$/,
+    exclude: []
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      plugins: [
+        {
+          name: "load-js-files-as-jsx",
+          setup(build) {
+            build.onLoad({ filter: /src\/.*\.js$/ }, async (args) => {
+              return ({
+                loader: "jsx",
+                contents: await fs.readFile(args.path, "utf8"),
+              })
+            });
+          },
+        },
+      ],
+    },
   },
   resolve: {
     alias: {
@@ -44,9 +60,8 @@ export default defineConfig({
   },
   // base: base.cdn,
   plugins: [
-    vitePluginTransformCssModules(),
+    // vitePluginTransformCssModules(),
     reactRefresh(),
-    vitePlugin([], { jsxInject: true }),
     vitePluginImp({
       libList: [
         {
