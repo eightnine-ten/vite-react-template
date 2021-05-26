@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import vitePluginImp from 'vite-plugin-imp'
-// import vitePluginTransformCssModules from 'vite-plugin-transform-css-module';
+import vitePluginTransformCssModules from './plugin';
+import vitePluginTransformCssModules2 from './plugin2';
 import fs from 'fs/promises';
-
 import path from 'path';
+
+
 const config  = {
   development: {
     cdn: './',
@@ -60,7 +62,8 @@ export default defineConfig({
   },
   // base: base.cdn,
   plugins: [
-    // vitePluginTransformCssModules(),
+    vitePluginTransformCssModules(),
+    vitePluginTransformCssModules2(),
     reactRefresh(),
     vitePluginImp({
       libList: [

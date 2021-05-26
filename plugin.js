@@ -1,76 +1,71 @@
-import { transformSync } from '@babel/core';
 import { dataToEsm } from '@rollup/pluginutils'
 const cssLangs = `\\.(scss|styl|stylus|pcss|postcss)($|\\?)`;
-const importRE = /import\s+([\S]+)\s+from\s+('|")([\S]+)\.(css|less|sass|scss|styl|stylus|postcss)(\?[\S]*)?('|")/;
-const jsRE = /\.(js|mjs|ts|jsx|tsx)/;
 const cssLangRE = new RegExp(cssLangs);
 const cssModuleRE = new RegExp(`\\.module${cssLangs}`);
-function autoCSSModulePlugin() {
-  return () => {
-    return {
-      visitor: {
-        ImportDeclaration: (path) => {
-          const { node } = path;
-          if (!node) {
-            return;
-          }
-          // 如果不是module css的那么就通过 转化为 module.styl来模块化css
-          if (
-            node.specifiers &&
-            node.specifiers.length > 0 &&
-            cssLangRE.test(node.source.value) &&
-            !cssModuleRE.test(node.source.value)
-          ) {
-            const cssFile = node.source.value;
-            node.source.value = cssFile + (cssFile.indexOf('?') > -1 ? '&' : '?') + '.module.styl';
-          }
-        },
-      },
-    };
-  };
-}
+const modulesOptions = { scopeBehaviour: 'local', localsConvention: 'camelCaseOnly' }
 
-function transform(code, { sourceMap, file }) {
-  const parsePlugins = ['jsx'];
-  if (/\.tsx?$/.test(file)) {
-    parsePlugins.push('typescript');
-  }
 
-  const result = transformSync(code, {
-    configFile: false,
-    parserOpts: {
-      sourceType: 'module',
-      allowAwaitOutsideFunction: true,
-      plugins: parsePlugins,
-    },
-    sourceMaps: true,
-    sourceFileName: file,
-    inputSourceMap: sourceMap,
-    plugins: [autoCSSModulePlugin()],
-  });
+async function compileCSS(id, code) {
+  let modules;
+  let postcssPlugins = [];
+  postcssPlugins.unshift(
+    (await import('postcss-modules')).default({
+      ...modulesOptions,
+      getJSON(
+        cssFileName,
+        _modules,
+        outputFileName
+      ) {
+        modules = _modules
+        if (modulesOptions && typeof modulesOptions.getJSON === 'function') {
+          modulesOptions.getJSON(cssFileName, _modules, outputFileName)
+        }
+      }
+    })
+  )
+
+  const postcssResult = await (await import('postcss'))
+  .default(postcssPlugins)
+  .process(code, {
+    to: id,
+    from: id,
+    map: {
+      inline: false,
+      annotation: false,
+    }
+  })
 
   return {
-    code: result.code,
-    map: result.map,
-  };
+    ast: postcssResult,
+    modules,
+    code: postcssResult.css,
+  }
 }
+
+
+export let exportModules;
+export let exportCss;
 
 export default function viteTransformCSSModulesPlugin() {
   const name = 'vite-plugin-transform-css-modules';
   return {
+    enforce: 'pre',
     name,
-    transform(code, id) {
-      if (cssLangRE.test(id) && !id.includes('node_modules')) {
-
-        const modulesCode = dataToEsm(code, { namedExports: true, preferConst: true })
-        return [
-          `import { updateStyle, removeStyle } from /@vite/client`,
-          `const id = ${JSON.stringify(id)}`,
-          `const css = ${JSON.stringify(code)}`,
-          `updateStyle(id, css)`,
-          `${modulesCode || `import.meta.hot.accept()\nexport default css`}`,
-          `import.meta.hot.prune(() => removeStyle(id))`
-        ].join('\n')
+    async transform(raw, id) {
+      if (cssLangRE.test(id) && !id.includes('node_modules') && !cssModuleRE.test(id)) {
+        const {
+          code: css,
+          modules
+        } = await compileCSS(id, raw)
+      
+        const modulesCode =
+        modules && dataToEsm(modules, { namedExports: true, preferConst: true })
+        exportModules = modulesCode;
+        exportCss = css;
+        return {
+          code: css,
+          map: { mappings: '' }
+        }
       }
       return undefined;
     },

@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import { menuList } from './mock';
-import style from './style.module.scss';
+import style from './style.scss';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 const LayoutPage = (props) => {
