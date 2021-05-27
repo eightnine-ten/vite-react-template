@@ -23,7 +23,6 @@
     "react-router-dom": "^5.2.0",
     "sass": "^1.32.12",
     "vite": "^2.3.3",
-    "vite-plugin-imp": "^2.0.7",
-    "vite-plugin-transform-css-modules": "^1.0.1"
+    "vite-plugin-imp": "^2.0.7"
   }
 }

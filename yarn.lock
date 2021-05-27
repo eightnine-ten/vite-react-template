@@ -48,7 +48,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.14.0.tgz#a901128bce2ad02565df95e6ecbf195cf9465919"
   integrity sha512-vu9V3uMM/1o5Hl5OekMUowo3FqXLJSw+s+66nt0fSWVWTtmosdzn45JHOB3cPtZoe6CTBDzvSw0RdOY85Q37+Q==
 
-"@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.13.10", "@babel/core@^7.13.16":
+"@babel/core@^7.12.10", "@babel/core@^7.12.13", "@babel/core@^7.13.10":
   version "7.14.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.14.0.tgz#47299ff3ec8d111b493f1a9d04bf88c04e728d88"
   integrity sha512-8YqpRig5NmIHlMLw09zMlPTvUVMILjqCOtVgu+TVNWEBvy9b5I3RRyhqnrV4hjgEK7n8P9OqvkWJAFmEL6Wwfw==
@@ -1499,12 +1499,12 @@ vite-plugin-react-js-support@^1.0.7:
     "@babel/core" "^7.13.10"
     "@babel/plugin-transform-react-jsx" "^7.13.12"
 
-vite-plugin-transform-css-modules@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/vite-plugin-transform-css-modules/-/vite-plugin-transform-css-modules-1.0.1.tgz#627cd6a57589cfa75ad09112a9fd292c3ef32911"
-  integrity sha512-IeejgZPp+1B/tjN7rkBthvErsrGxguz2NCY0lRBimaFoFAk4lTA45mCrNrqONezJq0lbVKuP/vGxVZZYrCVdYA==
+vite-plugin-transform-css-modules@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vite-plugin-transform-css-modules/-/vite-plugin-transform-css-modules-1.0.3.tgz#f673a237ce8ff338f7e85d435c6f02acbbd3d986"
+  integrity sha512-2UjJRwGYwsMgS0iVlB2xkPauCY+c7zjUSlfvvydv3pT4N4Rg9ChVGDFA79o4C77tqD/faYf89zEh/dFbXBhGjg==
   dependencies:
-    "@babel/core" "^7.13.16"
+    "@rollup/pluginutils" "^4.1.0"
 
 vite@^2.3.3:
   version "2.3.3"
