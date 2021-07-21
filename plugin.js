@@ -1,5 +1,5 @@
 import { dataToEsm } from '@rollup/pluginutils';
-const cssLangs = `\\.(scss|styl|stylus|pcss|postcss)($|\\?)`;
+const cssLangs = `\\.(scss|less|styl|stylus|pcss|postcss)($|\\?)`;
 const cssLangRE = new RegExp(cssLangs);
 const cssModuleRE = new RegExp(`\\.module${cssLangs}`);
 const modulesOptions = { scopeBehaviour: 'local', localsConvention: 'camelCaseOnly' };
